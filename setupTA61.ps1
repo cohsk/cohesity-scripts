@@ -39,13 +39,15 @@ $reppol = New-Object 'Cohesity.Models.SnapshotReplicationCopyPolicy' -ArgumentLi
 $pol.snapshotReplicationCopyPolicies = $reppol
 $pol | Set-CohesityProtectionPolicy
 
+# Note -- Currently the Start-CohesityProtectionJob cmdlet does not support replication targets.  Will have to start these two jobs manually until
+# this option is available
+
+#Run the Physical Protection Job Now
+#$myJob = Get-CohesityProtectionJob -Names Physical
+#Start-CohesityProtectionJob -Id $myJob.Id -RunType KRegular
+
+#Run the Virtual Protection Job Now
+#$myJob = Get-CohesityProtectionJob -Names Virtual
+#Start-CohesityProtectionJob -Id $myJob.Id -RunType KRegular
+
 Disconnect-CohesityCluster
-
-#To be completed - Run the Physical Protection job
-
-#To be completed - Run the Virtual Protection job
-
-###Extra Credit — Run the BizApps Protection part of the lab
-
-#Get-CohesityStorageDomain
-
