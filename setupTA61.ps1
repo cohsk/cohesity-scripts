@@ -1,5 +1,6 @@
 #Make sure we have the latest Cohesity Module
-#Updated on 5/28/2019 due to Cohesity.PowerShell 1.0.10 changes.
+#Updated on 5/28/2019 due to Cohesity.PowerShell 1.0.10 changes. -sk
+#I will work on script adjustments to work with 1.0.10 soon.  It's 5/28/2019 today.  -sk
 Update-Module -Name “Cohesity.PowerShell” -RequiredVersion 1.0.9
 
 #setup credentials
