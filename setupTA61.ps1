@@ -31,11 +31,15 @@ $cred = new-object -typename System.Management.Automation.PSCredential -argument
 Connect-CohesityCluster -Server 172.16.3.101 -Credential ($cred)
 $c1ndd = Get-CohesityStorageDomain -Names sd-ndd-ncc | ConvertFrom-JSON | Select Id
 $c1idd = Get-CohesityStorageDomain -Names sd-idd-icc | ConvertFrom-JSON | Select Id
-Disconnect-CohesityCluster
 
 #Cancel the Physical Protection job
 #This line is for the undocumented feature fix
 Stop-CohesityProtectionJob -Name "Physical"
+#End fix
+
+Disconnect-CohesityCluster
+
+
 
 #Connect to Cluster 2
 Connect-CohesityCluster -Server 172.16.3.102 -Credential ($cred)
