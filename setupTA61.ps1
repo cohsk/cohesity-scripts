@@ -1,3 +1,20 @@
+#Added this bit of script to restart the physical centos vm
+#because sometimes it has an undocumented feature where it
+#kicks one of the filesystems into a read-only mode
+#which causes the protection job to fail
+
+#Install the VMware PowerCLI module
+Install-Module -Name "VMware.PowerCLI"
+
+#Connect to VCenter
+Connect-VIServer -Server "vcenter-01.talabs.local" -User "Administrator@vsphere.local" -Password "TechAccel1!"
+
+#Restart "centos-physical" because sometimes the file system starts up as read-only
+Get-VM "centos-physical" | Restart-VMGuest
+
+#Sleep for 2 minutes while the vm restarts
+start-sleep -Seconds 120
+
 #Make sure we have the latest Cohesity Module
 #Updated on 5/28/2019 due to Cohesity.PowerShell 1.0.10 changes. -sk
 #I will work on script adjustments to work with 1.0.10 soon.  It's 5/28/2019 today.  -sk
@@ -15,6 +32,10 @@ Connect-CohesityCluster -Server 172.16.3.101 -Credential ($cred)
 $c1ndd = Get-CohesityStorageDomain -Names sd-ndd-ncc | ConvertFrom-JSON | Select Id
 $c1idd = Get-CohesityStorageDomain -Names sd-idd-icc | ConvertFrom-JSON | Select Id
 Disconnect-CohesityCluster
+
+#Cancel the Physical Protection job
+#This line is for the undocumented feature fix
+Stop-CohesityProtectionJob -Name "Physical"
 
 #Connect to Cluster 2
 Connect-CohesityCluster -Server 172.16.3.102 -Credential ($cred)
