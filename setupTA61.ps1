@@ -18,7 +18,7 @@ start-sleep -Seconds 120
 #Make sure we have the latest Cohesity Module
 #Updated on 5/28/2019 due to Cohesity.PowerShell 1.0.10 changes. -sk
 #I will work on script adjustments to work with 1.0.10 soon.  It's 5/28/2019 today.  -sk
-Update-Module -Name “Cohesity.PowerShell” -RequiredVersion 1.0.9
+Update-Module -Name “Cohesity.PowerShell”
 
 #setup credentials
 $username = "admin"
@@ -61,8 +61,8 @@ Register-CohesityRemoteCluster -RemoteClusterIps 172.16.3.102 -RemoteClusterCred
 #Add Replication to the Bronze Protection Policy
 $pol = Get-CohesityProtectionPolicy -Names Bronze
 $rcluster = Get-CohesityRemoteCluster | Select ClusterId
-$target = New-Object 'Cohesity.Models.ReplicationTarget_' -ArgumentList $rcluster.clusterId, cohesity-02
-$reppol = New-Object 'Cohesity.Models.SnapshotReplicationCopyPolicy' -ArgumentList $true, 95, 1, KEvery, $target
+$target = New-Object 'Cohesity.Model.ReplicationTargetSettings' -ArgumentList $rcluster.clusterId, cohesity-02
+$reppol = New-Object 'Cohesity.Model.SnapshotReplicationCopyPolicy' -ArgumentList $true, 95, 1, KEvery, $target
 $pol.snapshotReplicationCopyPolicies = $reppol
 $pol | Set-CohesityProtectionPolicy
 
