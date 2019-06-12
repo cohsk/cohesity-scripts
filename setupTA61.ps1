@@ -16,8 +16,6 @@ Get-VM "centos-physical" | Restart-VMGuest
 start-sleep -Seconds 120
 
 #Make sure we have the latest Cohesity Module
-#Updated on 5/28/2019 due to Cohesity.PowerShell 1.0.10 changes. -sk
-#I will work on script adjustments to work with 1.0.10 soon.  It's 5/28/2019 today.  -sk
 Update-Module -Name “Cohesity.PowerShell”
 
 #setup credentials
@@ -66,15 +64,16 @@ $reppol = New-Object 'Cohesity.Model.SnapshotReplicationCopyPolicy' -ArgumentLis
 $pol.snapshotReplicationCopyPolicies = $reppol
 $pol | Set-CohesityProtectionPolicy
 
-# Note -- Currently the Start-CohesityProtectionJob cmdlet does not support replication targets.  Will have to start these two jobs manually until
-# this option is available
+## Updated June 2019 with the 1.0.11 release of the Cohesity PowerShell support to launch jobs with Replication
 
 #Run the Physical Protection Job Now
-#$myJob = Get-CohesityProtectionJob -Names Physical
-#Start-CohesityProtectionJob -Id $myJob.Id -RunType KRegular
+$myJob = Get-CohesityProtectionJob -Names Physical
+$myArch = New-Object 'Cohesity.Model.ArchivalExternalTarget' -ArgumentList $null, $null, $null
+$snaptarget = New-Object 'Cohesity.Model.RunJobSnapshotTarget' -ArgumentList $myArch, $null, $null, $target, kRemote
+Start-CohesityProtectionJob -Id $myJob.Id -RunType KRegular -CopyRunTargets $snaptarget
 
 #Run the Virtual Protection Job Now
-#$myJob = Get-CohesityProtectionJob -Names Virtual
-#Start-CohesityProtectionJob -Id $myJob.Id -RunType KRegular
+$myJob = Get-CohesityProtectionJob -Names Virtual
+Start-CohesityProtectionJob -Id $myJob.Id -RunType KRegular -CopyRunTargets $snaptarget
 
 Disconnect-CohesityCluster
