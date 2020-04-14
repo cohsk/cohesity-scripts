@@ -1,17 +1,18 @@
 #List nodes
+#Use Brian's library
+#used with Brian's standard sharing policy
+#github.com/bseltz-cohesity/scripts/master/powershell
 
-#Make sure we have the latest Cohesity Module
-Update-Module -Name “Cohesity.PowerShell”
+# Download Commands
+$repoURL = 'https://raw.githubusercontent.com/bseltz-cohesity/scripts/master/powershell'
+(Invoke-WebRequest -Uri "$repoUrl/cohesity-api/cohesity-api.ps1").content | Out-File cohesity-api.ps1; (Get-Content cohesity-api.ps1) | Set-Content cohesity-api.ps1
+# End Download Commands
 
-#setup credentials
-$username = "admin"
-$password = "admin"
-$secstr = New-Object -TypeName System.Security.SecureString
-$password.ToCharArray() | ForEach-Object {$secstr.AppendChar($_)}
-$cred = new-object -typename System.Management.Automation.PSCredential -argumentlist $username, $secstr
+#dot the command directory
+. ./cohesity-api.ps1
 
-#Connect to Cluster 1
-Connect-CohesityCluster -Server 172.16.3.101 -Credential ($cred)
-$nodelist = 
+#authenticate to the cluster
+apiauth -vip 172.16.3.101 -username admin -password admin
 
-Disconnect-CohesityCluster
+$nodes = api get nodes
+$nodes | ft
